@@ -19,12 +19,12 @@ class WeatherList extends StatefulWidget {
 class _WeatherListState extends State<WeatherList> {
   int selectedPaddingIndex = 0; // 初始選擇第一組 Padding
 
-  static const TextStyle textStyle = TextStyle(
+  static const TextStyle _textStyle = TextStyle(
     color: Colors.white,
     fontSize: 18,
   );
 
-  static const TextStyle bigTitle = TextStyle(
+  static const TextStyle _bigTitle = TextStyle(
     color: Colors.white,
     fontSize: 40,
   );
@@ -56,8 +56,6 @@ class _WeatherListState extends State<WeatherList> {
               style: GoogleFonts.montserrat(color: Colors.white),
             )).toList(),
           ),
-
-
           _buildWeatherDetails(),
         ],
       ),
@@ -65,6 +63,10 @@ class _WeatherListState extends State<WeatherList> {
   }
 
   Widget _buildWeatherDetails() {
+    final parameterStartIndex = selectedPaddingIndex + 3;
+    final rainIndex = parameterStartIndex + 9;
+    final comfortIndex = parameterStartIndex + 6;
+
     return Column(
       children: [
         Container(
@@ -75,7 +77,7 @@ class _WeatherListState extends State<WeatherList> {
             children: [
               Text(
                 widget.locationName,
-                style: bigTitle,
+                style: _bigTitle,
               ),
               Padding(
                 padding: EdgeInsets.only(left: 5.0),
@@ -100,7 +102,7 @@ class _WeatherListState extends State<WeatherList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.parameterNameList[selectedPaddingIndex + 3 + 3] + '~' + widget.parameterNameList[selectedPaddingIndex + 3] + '°c',
+                '${widget.parameterNameList[parameterStartIndex + 3]}~${widget.parameterNameList[parameterStartIndex]}°c',
                 style: GoogleFonts.montserrat(
                   textStyle: Theme.of(context).textTheme.displayLarge,
                   fontSize: 68,
@@ -111,7 +113,6 @@ class _WeatherListState extends State<WeatherList> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-
                   Text(
                     widget.parameterNameList[selectedPaddingIndex],
                     style: GoogleFonts.notoSans(
@@ -124,54 +125,42 @@ class _WeatherListState extends State<WeatherList> {
                 ],
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          "assets/rain.png",
-                          width: 28,
-                          height: 28,
-                        ),
-                        Text(
-                          widget.parameterNameList[selectedPaddingIndex + 3 + 9]+'%',
-                          style: GoogleFonts.montserrat(
-                            textStyle: Theme.of(context).textTheme.displayLarge,
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          "assets/comfortable.png",
-                          width: 25,
-                          height: 25,
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          widget.parameterNameList[selectedPaddingIndex + 3 + 6],
-                          style: textStyle,
-                        ),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      _buildWeatherDetailIcon("assets/rain.png", widget.parameterNameList[rainIndex] + '%'),
+                      _buildWeatherDetailIcon("assets/comfortable.png", widget.parameterNameList[comfortIndex]),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildWeatherDetailIcon(String assetPath, String text) {
+    return Row(
+      children: [
+        Image.asset(
+          assetPath,
+          width: 28,
+          height: 28,
+        ),
+        SizedBox(width: 7),
+        Text(
+          text,
+          style: GoogleFonts.montserrat(
+            textStyle: Theme.of(context).textTheme.displayLarge,
+            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        SizedBox(width: 15),
       ],
     );
   }
