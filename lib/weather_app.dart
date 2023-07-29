@@ -47,6 +47,9 @@ class WeatherApp extends ConsumerWidget {
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
+                          onSubmitted: (_) {
+                            FocusScope.of(context).unfocus();
+                          },
                         ),
                       ),
                       SizedBox.fromSize(
@@ -63,7 +66,7 @@ class WeatherApp extends ConsumerWidget {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text("請輸入欲查詢地點"),
-                                      duration: Duration(seconds: 5),
+                                      duration: Duration(seconds: 4),
                                     ),
                                   );
                                 } else {
@@ -85,6 +88,7 @@ class WeatherApp extends ConsumerWidget {
                           ),
                         ),
                       )
+
                     ],
                   ),
                 ),
@@ -92,7 +96,6 @@ class WeatherApp extends ConsumerWidget {
                   data: (weather) {
                     //初始狀態
                     if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
-                        ref.read(weatherProvider.notifier).parameterNameList.isEmpty &&
                         !ref.read(weatherProvider.notifier).isSearched){
                       return Container(
                         width: MediaQuery.of(context).size.width,
@@ -106,17 +109,19 @@ class WeatherApp extends ConsumerWidget {
                         ),
                       );
                     }
-                    else if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
+                    if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
                         ref.read(weatherProvider.notifier).isSearched){
-                      Future.delayed(Duration.zero, () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("查無此地點"),
-                            duration: Duration(seconds: 4),
-                          ),
-                        );
-                      });
-                      return Container();
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 600, // 添加高度参数
+                        alignment: Alignment.center,
+                        child: const Text(
+                          "查無此地點，請檢查輸入內容",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,),
+                        ),
+                      );
                     }
                     else {
                       return Expanded(
@@ -130,7 +135,7 @@ class WeatherApp extends ConsumerWidget {
                   },
                   loading: () => const SpinKitThreeBounce(
                     color: Colors.grey,
-                    size: 50.0,
+                    size: 40.0,
                   ),
                   error: (error, stack) {
                     ref.read(weatherProvider.notifier).isSearched = false;
