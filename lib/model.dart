@@ -1,6 +1,6 @@
 class WeatherForecast {
-  String sent;
-  List<LocationData> locations;
+  late String sent;
+  late List<LocationData> locations;
 
   WeatherForecast({
     required this.sent,
@@ -8,84 +8,93 @@ class WeatherForecast {
   });
 
   factory WeatherForecast.fromJson(Map<String, dynamic> json) {
-    String sent = json['cwbopendata']['sent'] ?? '';
+    final cwbopendata = json['cwbopendata'] ?? {};
+    final sent = cwbopendata['sent'] as String? ?? '';
 
-    List<LocationData> locations = [];
-    var locationElements = json['cwbopendata']['dataset']['location'];
-    for (var locationElement in locationElements) {
-      String locationName = locationElement['locationName'] ?? '';
-      List<ElementData> elements = [];
-      for (var element in locationElement['weatherElement'] ?? []) {
-        String elementName = element['elementName'] ?? '';
-        List<TimeData> times = [];
-        for (var time in element['time'] ?? []) {
-          String startTime = time['startTime'] ?? '';
-          String endTime = time['endTime'] ?? '';
-          String parameterName = time['parameter']['parameterName'] ?? '';
-          String parameterValue = time['parameter']['parameterValue'] ?? '';
-          // Check if 'parameterUnit' exists, if yes, append it to 'parameterValue'
-          String parameterUnit = time['parameter']['parameterUnit'] ?? '';
-          if (parameterUnit.isNotEmpty) {
-            parameterValue += ' $parameterUnit';
-          }
-          times.add(TimeData(
-            startTime: startTime,
-            endTime: endTime,
-            parameterName: parameterName,
-            parameterValue: parameterValue,
-          ));
-        }
-        elements.add(ElementData(elementName: elementName, times: times));
-      }
-      locations.add(LocationData(locationName: locationName, elements: elements));
-    }
+    final locationElements = cwbopendata['dataset']['location'] as List<dynamic>? ?? [];
+    final locations = locationElements
+        .map<LocationData>((locationElement) => LocationData.fromJson(locationElement))
+        .toList();
 
     return WeatherForecast(sent: sent, locations: locations);
   }
+
   List<TimeData> getWeatherDataByLocation(String locationName) {
-    List<TimeData> result = [];
-    for (var location in locations) {
-      if (location.locationName == locationName) {
-        for (var element in location.elements) {
-          result.addAll(element.times);
-        }
-        break;
-      }
-    }
-    return result;
+    final location = locations.firstWhere(
+          (location) => location.locationName == locationName,
+      orElse: () => LocationData(locationName: '', elements: []), // Return an empty LocationData if not found
+    );
+
+    return location.elements.expand((element) => element.times).toList();
   }
+
 }
 
 class LocationData {
-  String locationName;
-  List<ElementData> elements;
+  late String locationName;
+  late List<ElementData> elements;
 
   LocationData({
-    required this.locationName,
-    required this.elements,
+    this.locationName = '',
+    this.elements = const [],
   });
+
+  factory LocationData.fromJson(Map<String, dynamic> json) {
+    final locationName = json['locationName'] as String? ?? '';
+    final weatherElements = json['weatherElement'] as List<dynamic>? ?? [];
+    final elements = weatherElements
+        .map<ElementData>((element) => ElementData.fromJson(element))
+        .toList();
+
+    return LocationData(locationName: locationName, elements: elements);
+  }
 }
 
 class ElementData {
-  String elementName;
-  List<TimeData> times;
+  late String elementName;
+  late List<TimeData> times;
 
   ElementData({
-    required this.elementName,
-    required this.times,
+    this.elementName = '',
+    this.times = const [],
   });
+
+  factory ElementData.fromJson(Map<String, dynamic> json) {
+    final elementName = json['elementName'] as String? ?? '';
+    final timeElements = json['time'] as List<dynamic>? ?? [];
+    final times = timeElements.map<TimeData>((time) => TimeData.fromJson(time)).toList();
+
+    return ElementData(elementName: elementName, times: times);
+  }
 }
 
 class TimeData {
-  String startTime;
-  String endTime;
-  String parameterName;
-  String parameterValue;
+  late String startTime;
+  late String endTime;
+  late String parameterName;
+  late String parameterValue;
 
   TimeData({
-    required this.startTime,
-    required this.endTime,
-    required this.parameterName,
-    required this.parameterValue,
+    this.startTime = '',
+    this.endTime = '',
+    this.parameterName = '',
+    this.parameterValue = '',
   });
+
+  factory TimeData.fromJson(Map<String, dynamic> json) {
+    final startTime = json['startTime'] as String? ?? '';
+    final endTime = json['endTime'] as String? ?? '';
+    final parameter = json['parameter'] as Map<String, dynamic>? ?? {};
+    final parameterName = parameter['parameterName'] as String? ?? '';
+    final parameterValue = parameter['parameterValue'] as String? ?? '';
+    final parameterUnit = parameter['parameterUnit'] as String? ?? '';
+    final formattedParameterValue = parameterUnit.isNotEmpty ? '$parameterValue $parameterUnit' : parameterValue;
+
+    return TimeData(
+      startTime: startTime,
+      endTime: endTime,
+      parameterName: parameterName,
+      parameterValue: formattedParameterValue,
+    );
+  }
 }

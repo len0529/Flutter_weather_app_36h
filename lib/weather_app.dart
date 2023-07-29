@@ -88,7 +88,6 @@ class WeatherApp extends ConsumerWidget {
                           ),
                         ),
                       )
-
                     ],
                   ),
                 ),
@@ -109,7 +108,7 @@ class WeatherApp extends ConsumerWidget {
                         ),
                       );
                     }
-                    if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
+                    else if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
                         ref.read(weatherProvider.notifier).isSearched){
                       return Container(
                         width: MediaQuery.of(context).size.width,
