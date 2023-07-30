@@ -1,30 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weather_app_36h/weather_app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:weather_app_36h/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Shows an error message when the search text is empty', (WidgetTester tester) async {
+    // Build the WeatherApp widget.
+    await tester.pumpWidget(ProviderScope(child: MaterialApp(home: WeatherApp())));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Find the search button.
+    final searchButton = find.byIcon(Icons.search);
+
+    // Tap on the search button.
+    await tester.tap(searchButton);
+
+    // Trigger a frame.
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Check if the error snackbar is shown with the correct text.
+    expect(find.text('請輸入欲查詢地點'), findsOneWidget);
   });
 }

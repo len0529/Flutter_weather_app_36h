@@ -11,7 +11,6 @@ class WeatherApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -35,7 +34,7 @@ class WeatherApp extends ConsumerWidget {
                   padding: const EdgeInsets.all(30),
                   child: Row(
                     children: [
-                      //輸入框 & 搜尋
+                      // 輸入框 & 搜尋
                       Expanded(
                         child: TextField(
                           controller: searchController,
@@ -61,7 +60,7 @@ class WeatherApp extends ConsumerWidget {
                               splashColor: Colors.grey,
                               onTap: () {
                                 FocusScope.of(context).unfocus();
-                                //檢查是否非空
+                                // 檢查是否非空
                                 if (searchController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -91,55 +90,57 @@ class WeatherApp extends ConsumerWidget {
                     ],
                   ),
                 ),
-                ref.watch(performSearchProvider(searchController.text)).when(
-                  data: (weather) {
-                    //初始狀態
-                    if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
-                        !ref.read(weatherProvider.notifier).isSearched){
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 600, // 添加高度参数
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "歡迎",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 50,),
-                        ),
-                      );
-                    }
-                    else if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
-                        ref.read(weatherProvider.notifier).isSearched){
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 600, // 添加高度参数
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "查無此地點，請檢查輸入內容",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,),
-                        ),
-                      );
-                    }
-                    else {
-                      return Expanded(
-                        child: WeatherList(
+                Expanded(
+                  child: ref.watch(performSearchProvider(searchController.text)).when(
+                    data: (weather) {
+                      // 初始狀態
+                      if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
+                          !ref.read(weatherProvider.notifier).isSearched){
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 600, // 添加高度参数
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "歡迎",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 50,
+                            ),
+                          ),
+                        );
+                      }
+                      else if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
+                          ref.read(weatherProvider.notifier).isSearched){
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 600, // 添加高度参数
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "查無此地點，請檢查輸入內容",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                            ),
+                          ),
+                        );
+                      }
+                      else {
+                        return WeatherList(
                           timeRangeList: ref.read(weatherProvider.notifier).timeRangeList,
                           parameterNameList: ref.read(weatherProvider.notifier).parameterNameList,
                           locationName: ref.read(weatherProvider.notifier).searchText,
-                        ),
-                      );
-                    }
-                  },
-                  loading: () => const SpinKitThreeBounce(
-                    color: Colors.grey,
-                    size: 40.0,
+                        );
+                      }
+                    },
+                    loading: () => const SpinKitThreeBounce(
+                      color: Colors.grey,
+                      size: 40.0,
+                    ),
+                    error: (error, stack) {
+                      ref.read(weatherProvider.notifier).isSearched = false;
+                      return Text('Error: ${ref.read(weatherProvider.notifier).error}');
+                    },
                   ),
-                  error: (error, stack) {
-                    ref.read(weatherProvider.notifier).isSearched = false;
-                    return Text('Error: ${ref.read(weatherProvider.notifier).error}');
-                  },
                 ),
               ],
             ),
