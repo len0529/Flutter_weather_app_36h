@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app_36h/transition_animate.dart';
+import 'package:flutter/services.dart';
 
 class WeatherList extends StatefulWidget {
   final List<String> timeRangeList;
@@ -10,6 +11,7 @@ class WeatherList extends StatefulWidget {
   WeatherList({
     required this.timeRangeList,
     required this.parameterNameList,
+
     required this.locationName,
   });
 
@@ -21,12 +23,7 @@ class _WeatherListState extends State<WeatherList> {
   int selectedPaddingIndex = 0; // 初始選擇第一組 Padding
   int lastSelectedPaddingIndex = 0;
 
-  static const TextStyle _textStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 18,
-  );
-
-  static const TextStyle _bigTitle = TextStyle(
+  static const TextStyle _bigTitle = TextStyle( //縣市標題
     color: Colors.white,
     fontSize: 40,
   );
@@ -43,13 +40,14 @@ class _WeatherListState extends State<WeatherList> {
           ToggleButtons(
             isSelected: [0, 1, 2].map((index) => selectedPaddingIndex == index).toList(),
             onPressed: (index) {
+              HapticFeedback.lightImpact();
               setState(() {
                 lastSelectedPaddingIndex = selectedPaddingIndex;  // Update last selected index before changing the current one
                 selectedPaddingIndex = index;
               });
             },
             borderRadius: BorderRadius.circular(15),
-            fillColor: Colors.blue,
+            fillColor: Colors.lightBlue,
             children: [
               "Now",
               "+12",
@@ -59,7 +57,7 @@ class _WeatherListState extends State<WeatherList> {
               style: GoogleFonts.montserrat(color: Colors.white),
             )).toList(),
           ),
-          Container(
+          Container(  //縣市標題
             width: MediaQuery.of(context).size.width * 7 / 8,
             alignment: Alignment.centerLeft,
             child: Text(
@@ -68,11 +66,11 @@ class _WeatherListState extends State<WeatherList> {
             ),
           ),
 
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
+          AnimatedSwitcher(  //下方轉場動畫
+            duration: Duration(milliseconds: 700),
             child: _buildWeatherDetails(),
             transitionBuilder: (Widget child, Animation<double> animation) {
-              var begin = selectedPaddingIndex > lastSelectedPaddingIndex ? Offset(2, 0.0) : Offset(-2, 0.0);
+              var begin = selectedPaddingIndex > lastSelectedPaddingIndex ? Offset(2, 0.0) : Offset(-2, 0.0);  //檢查index大小關係
               var end = Offset.zero;
               var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.ease));
 
@@ -88,7 +86,7 @@ class _WeatherListState extends State<WeatherList> {
   }
 
   Widget _buildWeatherDetails() {
-    final parameterStartIndex = selectedPaddingIndex + 3;
+    final parameterStartIndex = selectedPaddingIndex + 3;  //依照回傳列表取值
     final rainIndex = parameterStartIndex + 9;
     final comfortIndex = parameterStartIndex + 6;
 
@@ -116,7 +114,7 @@ class _WeatherListState extends State<WeatherList> {
             ],
           ),
         ),
-        SizedBox(height: 350),
+        SizedBox(height: 370),
         Container(
           width: MediaQuery.of(context).size.width * 7 / 8,
           alignment: Alignment.centerLeft,
@@ -124,7 +122,7 @@ class _WeatherListState extends State<WeatherList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${widget.parameterNameList[parameterStartIndex + 3]}~${widget.parameterNameList[parameterStartIndex]}°c',
+                '${widget.parameterNameList[parameterStartIndex + 3]}~${widget.parameterNameList[parameterStartIndex]}°c', //氣溫
                 style: GoogleFonts.montserrat(
                   textStyle: Theme.of(context).textTheme.displayLarge,
                   fontSize: 68,
@@ -136,12 +134,12 @@ class _WeatherListState extends State<WeatherList> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    widget.parameterNameList[selectedPaddingIndex],
+                    widget.parameterNameList[selectedPaddingIndex], //天氣描述
                     style: GoogleFonts.notoSans(
                       textStyle: Theme.of(context).textTheme.displayLarge,
                       fontSize: 20,
                       color: Colors.white,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -182,7 +180,7 @@ class _WeatherListState extends State<WeatherList> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(width: 15),
+        SizedBox(width: 18),
       ],
     );
   }

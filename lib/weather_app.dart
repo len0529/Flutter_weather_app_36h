@@ -31,7 +31,7 @@ class WeatherApp extends ConsumerWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(30),
+                  padding: const EdgeInsets.only(left: 30, top: 30, right: 30, bottom: 15),
                   child: Row(
                     children: [
                       // 輸入框 & 搜尋
@@ -51,7 +51,7 @@ class WeatherApp extends ConsumerWidget {
                           },
                         ),
                       ),
-                      SizedBox.fromSize(
+                      SizedBox.fromSize(  //search button
                         size: const Size(50, 50),
                         child: ClipOval(
                           child: Material(
@@ -98,32 +98,38 @@ class WeatherApp extends ConsumerWidget {
                           !ref.read(weatherProvider.notifier).isSearched){
                         return Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 600, // 添加高度参数
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "歡迎",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 50,
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/5),
+                            child: const Text(
+                              "歡迎",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 50,
+                              ),
                             ),
                           ),
                         );
                       }
+// searched but no result
                       else if(ref.read(weatherProvider.notifier).timeRangeList.isEmpty &&
                           ref.read(weatherProvider.notifier).isSearched){
                         return Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 600, // 添加高度参数
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "查無此地點，請檢查輸入內容",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/5),
+                            child: const Text(
+                              "查無此地點，請檢查輸入內容",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                              ),
                             ),
                           ),
                         );
                       }
+
                       else {
                         return WeatherList(
                           timeRangeList: ref.read(weatherProvider.notifier).timeRangeList,

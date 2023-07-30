@@ -19,6 +19,7 @@ class WeatherState extends StateNotifier<WeatherForecast?> {
       final newWeather = await WeatherApiClient().request();
       List<TimeData> timeDataList = newWeather.getWeatherDataByLocation(searchText);
       timeRangeList = timeDataList.map((data) {
+        //整理天氣格式
         var timeStart = data.startTime.split("T")[0].substring(5, ) + " " + data.startTime.split("T")[1].substring(0, 5);
         var timeEnd = data.endTime.split("T")[0].substring(5, ) + " " + data.endTime.split("T")[1].substring(0, 5);
         return '$timeStart - $timeEnd';
