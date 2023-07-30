@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_app_36h/transition_animate.dart';
 
 class WeatherList extends StatefulWidget {
   final List<String> timeRangeList;
@@ -18,6 +19,7 @@ class WeatherList extends StatefulWidget {
 
 class _WeatherListState extends State<WeatherList> {
   int selectedPaddingIndex = 0; // 初始選擇第一組 Padding
+  int lastSelectedPaddingIndex = 0;
 
   static const TextStyle _textStyle = TextStyle(
     color: Colors.white,
@@ -42,6 +44,7 @@ class _WeatherListState extends State<WeatherList> {
             isSelected: [0, 1, 2].map((index) => selectedPaddingIndex == index).toList(),
             onPressed: (index) {
               setState(() {
+                lastSelectedPaddingIndex = selectedPaddingIndex;  // Update last selected index before changing the current one
                 selectedPaddingIndex = index;
               });
             },
@@ -56,7 +59,29 @@ class _WeatherListState extends State<WeatherList> {
               style: GoogleFonts.montserrat(color: Colors.white),
             )).toList(),
           ),
-          _buildWeatherDetails(),
+          Container(
+            width: MediaQuery.of(context).size.width * 7 / 8,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.locationName,
+              style: _bigTitle,
+            ),
+          ),
+
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: _buildWeatherDetails(),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              var begin = selectedPaddingIndex > lastSelectedPaddingIndex ? Offset(2, 0.0) : Offset(-2, 0.0);
+              var end = Offset.zero;
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.ease));
+
+              return MySlideTransition(
+                child: child,
+                position: tween.animate(animation),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -68,6 +93,7 @@ class _WeatherListState extends State<WeatherList> {
     final comfortIndex = parameterStartIndex + 6;
 
     return Column(
+      key: ValueKey<int>(selectedPaddingIndex), // Add key to ensure new widget is built on toggle switch
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 7 / 8,
@@ -75,10 +101,6 @@ class _WeatherListState extends State<WeatherList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.locationName,
-                style: _bigTitle,
-              ),
               Padding(
                 padding: EdgeInsets.only(left: 5.0),
                 child: Text(
