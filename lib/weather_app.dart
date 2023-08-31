@@ -22,7 +22,7 @@ class WeatherApp extends ConsumerWidget {
         resizeToAvoidBottomInset: false,
         body: Container(
           decoration: const BoxDecoration(
-            image: DecorationImage(
+            image: DecorationImage( 
               image: AssetImage("assets/background_image2.jpg"),
               fit: BoxFit.cover,
             ),

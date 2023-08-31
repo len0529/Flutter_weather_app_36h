@@ -11,7 +11,6 @@ class WeatherList extends StatefulWidget {
   WeatherList({
     required this.timeRangeList,
     required this.parameterNameList,
-
     required this.locationName,
   });
 
