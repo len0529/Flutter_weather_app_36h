@@ -5,11 +5,10 @@
 ## 截圖
 
 <div style="display: inline-block; margin-right: 20px;">
-    <img src="assets/sample1.png" alt="示例圖片1" width="50%" height="50%">
-    <img src="assets/sample2.png" alt="示例圖片2" width="50%" height="50%">
+    <img src="assets/sample2.png" alt="示例圖片2" width="30%" height="30%">
 </div>
-<div style="display: inline-block;">
-    <img src="assets/sample2.png" alt="示例圖片2" width="50%" height="50%">
+<div style="display: inline-block; margin-top: 20px;">
+    <img src="assets/sample2.png" alt="示例圖片2" width="30%" height="30%">
 </div>
 
 ## 下載APK
