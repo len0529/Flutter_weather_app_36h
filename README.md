@@ -4,11 +4,13 @@
 
 ## 截圖
 
-<div style="display: inline-block; margin-right: 20px;">
-    <img src="assets/sample1.png" alt="示例圖片1" width="300" height="200">
-</div>
-<div style="display: inline-block;">
-    <img src="assets/sample2.png" alt="示例圖片2" width="300" height="200">
+<div style="display: flex;">
+    <div style="flex: 50%; padding-right: 10px;">
+        <img src="assets/sample1.png" alt="示例圖片1" width="100%">
+    </div>
+    <div style="flex: 50%; padding-left: 10px;">
+        <img src="assets/sample2.png" alt="示例圖片2" width="100%">
+    </div>
 </div>
 
 ## 下載APK
