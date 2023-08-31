@@ -1,8 +1,18 @@
-App to check the weather in Taiwan for the next 36 hours
+# 台灣未來36小時天氣查詢App
 
-![示例圖片1](assets/sample1.png)
-![示例圖片2](assets/sample2.png)
+這個App可以讓你查詢台灣未來36小時的天氣預報。
 
+## 截圖
 
-APK: https://drive.google.com/file/d/1yz7BsDbYRpsMm-tTRa-yLvZBasaqebf0/view?usp=sharing
->>>>>>> 7ff49cec064b91b788dfc1fa40a4865eabe3df4e
+<div style="display: inline-block; margin-right: 20px;">
+    <img src="assets/sample1.png" alt="示例圖片1" width="300" height="200">
+</div>
+<div style="display: inline-block;">
+    <img src="assets/sample2.png" alt="示例圖片2" width="300" height="200">
+</div>
+
+## 下載APK
+
+你可以從以下連結下載App的APK安裝文件：
+
+[下載APK](https://drive.google.com/file/d/1yz7BsDbYRpsMm-tTRa-yLvZBasaqebf0/view?usp=sharing)
