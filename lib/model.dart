@@ -8,12 +8,14 @@ class WeatherForecast {
   });
 
   factory WeatherForecast.fromJson(Map<String, dynamic> json) {
-    final cwbopendata = json['cwbopendata'] ?? {};
+    final cwbopendata = json['cwaopendata'] ?? {};
     final sent = cwbopendata['sent'] as String? ?? '';
 
-    final locationElements = cwbopendata['dataset']['location'] as List<dynamic>? ?? [];
+    final locationElements =
+        cwbopendata['dataset']['location'] as List<dynamic>? ?? [];
     final locations = locationElements
-        .map<LocationData>((locationElement) => LocationData.fromJson(locationElement))
+        .map<LocationData>(
+            (locationElement) => LocationData.fromJson(locationElement))
         .toList();
 
     return WeatherForecast(sent: sent, locations: locations);
@@ -21,13 +23,14 @@ class WeatherForecast {
 
   List<TimeData> getWeatherDataByLocation(String locationName) {
     final location = locations.firstWhere(
-          (location) => location.locationName == locationName,
-      orElse: () => LocationData(locationName: '', elements: []), // Return an empty LocationData if not found
+      (location) => location.locationName == locationName,
+      orElse: () => LocationData(
+          locationName: '',
+          elements: []), // Return an empty LocationData if not found
     );
 
     return location.elements.expand((element) => element.times).toList();
   }
-
 }
 
 class LocationData {
@@ -62,7 +65,8 @@ class ElementData {
   factory ElementData.fromJson(Map<String, dynamic> json) {
     final elementName = json['elementName'] as String? ?? '';
     final timeElements = json['time'] as List<dynamic>? ?? [];
-    final times = timeElements.map<TimeData>((time) => TimeData.fromJson(time)).toList();
+    final times =
+        timeElements.map<TimeData>((time) => TimeData.fromJson(time)).toList();
 
     return ElementData(elementName: elementName, times: times);
   }
@@ -88,7 +92,9 @@ class TimeData {
     final parameterName = parameter['parameterName'] as String? ?? '';
     final parameterValue = parameter['parameterValue'] as String? ?? '';
     final parameterUnit = parameter['parameterUnit'] as String? ?? '';
-    final formattedParameterValue = parameterUnit.isNotEmpty ? '$parameterValue $parameterUnit' : parameterValue;
+    final formattedParameterValue = parameterUnit.isNotEmpty
+        ? '$parameterValue $parameterUnit'
+        : parameterValue;
 
     return TimeData(
       startTime: startTime,
